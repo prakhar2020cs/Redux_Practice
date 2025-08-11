@@ -1,31 +1,39 @@
   import { useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Alert, Col, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../features/cart/cartSlice';
+import { getProducts } from '../features/product/productSlice';
 
 
 const Product = () => {
-const [products, setProducts] = useState([])
-
+const {data, status} = useSelector(state=>state.products);
+console.log(data)
+const dispatch = useDispatch();
 
 useEffect(()=>{
-fetch('https://dummyjson.com/products')
-.then(res => res.json())
-.then(data=>setProducts(data.products));
-
+dispatch(getProducts());
 }
 ,[])
 
-const cards = products.map((p)=>(
-  <Col md={3}>
-<Card style={{ width: '18rem' , margin: '10px' , border: '1px solid #ccc', borderRadius: '10px' }}>
-      <Card.Img variant="top" src={p.images} style={{height:'100px', width:'90px', margin:'auto'}} />
+if (status === 'loading') {
+  return <h1>Loading...</h1>
+}
+if (status === 'error') {
+  return <Alert variant='danger'>Error</Alert>
+}
+
+const cards = data.products?.map((p)=>(
+  <Col md={3} key={p.id}>
+<Card style={{ margin: '10px' , border: '1px solid #ccc', borderRadius: '10px' }}>
+      <Card.Img variant="top" fluid src={p.images} style={{margin:'auto'}} />
       <Card.Body>
         <Card.Title>{p.title}</Card.Title>
         <Card.Text>
-          {p.description}
+          {p.price}
         </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <Button variant="primary" onClick={()=>dispatch(addToCart(p))}>Add to cart</Button>
       </Card.Body>
     </Card>
   </Col>
@@ -34,10 +42,10 @@ const cards = products.map((p)=>(
 
   return (
     <div>
-      <div c style={{display: 'flex', flexWrap:'wrap' ,justifyContent: 'center', alignItems: 'center', marginTop: '20px'}}>
+      <Row >
       {cards}
 
-      </div>
+      </Row>
       </div> 
 
 
