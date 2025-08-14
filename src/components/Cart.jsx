@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,26 +9,28 @@ import {
 import { decreaseProductStock, increaseProductStock } from "../features/product/productSlice";
 
 const Cart = () => {
-  const products = useSelector((state) => state.products.data);
-  console.log(products, "products-cartPage");
+  // this is coming empty
+  const products = useSelector((state) => state.products);
+  console.log(products, "products");
   const cartProducts = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  console.log(cartProducts, "cart products");
+  console.log(cartProducts, "cart-products");
 
   const handleClearCart = () => {
     confirm("Are you sure you want to clear the cart?");
     dispatch(clearFromCart());
   };
 
+  const hanndleRemoveFromCart = (p)=>{
+    dispatch(increaseProductStock({...p, type: "add"}));
+    dispatch(decreaseCartStock({...p, type: "remove"}));
+
+  }
+
   const handleIncreaseCart = (p) => {
     debugger;
     console.log(products, "products-handlweIncreaseCart");
-      const foundProduct = products.data.find(product => product.id === p.id);
-
-    if (!foundProduct) {
-    alert("Product not found");
-    return;
-  }
+      const foundProduct = products?.data?.products?.find(product => product.id === p.id);
 
   if (foundProduct.stock === 0) {
     alert("Out of stock");
@@ -81,7 +82,7 @@ const Cart = () => {
             <Button
               className="ms-auto"
               variant="danger"
-              onClick={() => dispatch(removeFromCart(p))}
+              onClick={() => dispatch(hanndleRemoveFromCart(p))}
             >
               Remove
             </Button>

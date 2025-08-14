@@ -45,11 +45,17 @@ const cartSlice = createSlice({
 
     increaseCartStock(state, action) {
       const cartItem = state.find((item) => item.id === action.payload.id);
-
+      
       cartItem.stock++;
       saveCart(state);
     },
     decreaseCartStock(state, action) {
+      if(action.payload.type === "remove"){
+          const newData = state.filter((item)=>item.id !== action.payload.id)
+        saveCart(newData)
+        return newData;
+      
+       }
       const cartItem = state.find((item) => item.id === action.payload.id);
 
       if (cartItem.stock > 1) {

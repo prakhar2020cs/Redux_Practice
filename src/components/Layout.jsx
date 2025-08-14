@@ -2,11 +2,23 @@ import { Link, Outlet } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getFromLocal, getProducts } from "../features/product/productSlice";
+import { useEffect } from "react";
 
 const Layout = () => {
   const cartProducts = useSelector((state) => state.cart);
   console.log(cartProducts);
+    const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    if (!localStorage.getItem("products")) {
+      dispatch(getProducts());
+    } else {
+      dispatch(getFromLocal());
+    }
+  }, []);
 
   return (
     <div>
@@ -29,6 +41,9 @@ const Layout = () => {
               </Nav.Link>
               <Nav.Link to="/products" as={Link}>
                 Products
+              </Nav.Link>
+              <Nav.Link to="/auth" as={Link}>
+                Auth
               </Nav.Link>
               <Nav.Link to="/cart" as={Link}>
                 Cart {cartProducts.length}

@@ -1,28 +1,18 @@
-import { useEffect } from "react";
 import { Alert, Col, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, increaseCartStock } from "../features/cart/cartSlice";
+import { addToCart } from "../features/cart/cartSlice";
 import {
   decreaseProductStock,
-  getFromLocal,
-  getProducts,
-  
 } from "../features/product/productSlice";
 
 const Product = () => {
   const { data, status } = useSelector((state) => state.products);
-  console.log(data);
+  console.log(data,  "product page");
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!localStorage.getItem("products")) {
-      dispatch(getProducts());
-    } else {
-      dispatch(getFromLocal());
-    }
-  }, []);
+
 
   if (status === "loading") {
     return <h1>Loading...</h1>;
@@ -32,12 +22,13 @@ const Product = () => {
   }
 
   const cards = data.products?.map((p) => (
-    <Col md={3} key={p.id}>
-      <Card
+    <Col md={3} key={p.id} className="mb-4 " >
+      <Card className="h-100 mb-3"
         style={{
           margin: "10px",
           border: "1px solid #ccc",
           borderRadius: "10px",
+          position:"relative"
         }}
       >
         <Card.Img
@@ -50,7 +41,11 @@ const Product = () => {
           <Card.Title>{p.title}</Card.Title>
           <Card.Text>{p.price}</Card.Text>
           <Card.Text>{p.stock}</Card.Text>
-          <Button
+          <Card.Text style={{marginBottom:"30px"}}>{p.description}</Card.Text>
+          <Button  style={{
+            position:"absolute",
+            bottom:"15px"
+          }}
             disabled={p.stock === 0}
             variant="primary"
             onClick={() => {
