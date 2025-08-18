@@ -16,7 +16,7 @@ export const getProducts = createAsyncThunk(
 const saveStorage = (state)=>{
 
   console.log(state.data.products, "redux save to db call")
-  axios.post("https://localhost:7146/api/products", , {withCredentials:true})
+  axios.post("https://localhost:7146/api/products",  {withCredentials:true})
 }
 
 const productSlice = createSlice({
