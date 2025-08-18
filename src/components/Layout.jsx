@@ -4,6 +4,8 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getFromLocal, getProducts } from "../features/product/productSlice";
+
+
 import { useEffect } from "react";
 
 const Layout = () => {
@@ -39,8 +41,8 @@ const Layout = () => {
               <Nav.Link to="/" as={Link}>
                 Home
               </Nav.Link>
-              <Nav.Link to="/products" as={Link}>
-                Products
+              <Nav.Link to="/Dashboard" as={Link}>
+                User Dashboard
               </Nav.Link>
               <Nav.Link to="/auth" as={Link}>
                 Auth

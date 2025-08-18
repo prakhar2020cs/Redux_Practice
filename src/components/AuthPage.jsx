@@ -3,6 +3,7 @@ import { Tabs, Tab, Form, Button, Container, Alert } from "react-bootstrap";
 import axios from "axios";
 import { backendUrl } from "../util";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState("login");
@@ -16,13 +17,15 @@ export default function AuthPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = activeTab === "login" ? `${backendUrl}/api/login` : `${backendUrl}/api/register`;
-
+    let res ={};
     try {
-      const res = await axios.post(endpoint, { email, password },  { withCredentials: true });
-      setMessage(res.data.message || `${activeTab} successful!`);
-      navigate("/products");
+       res = await axios.post(endpoint, { email, password },  { withCredentials: true });
+      // setMessage(res.data.message || `${activeTab} successful!`);
+      // navigate("/dashboard");
+        toast.success(res.data.message , { id: "auth-message" });
     } catch (err) {
-      setMessage(err.response?.data?.error || `${activeTab} failed.`);
+      // setMessage(err.response?.data?.error || `${activeTab} failed.`);
+        toast.success( "login failed 122", { id: "auth-message" });
     }
   };
 
@@ -65,9 +68,14 @@ export default function AuthPage() {
 }
 
 function AuthForm({ email, setEmail, password, setPassword, onSubmit, message, tab }) {
+  // useEffect(() => {
+  //   if (message) {
+  //     toast.success(message, { id: "auth-message" });
+  //   }
+  // }, [message]);
+
   return (
     <>
-      {message && <Alert variant="info">{message}</Alert>}
       <Form onSubmit={onSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Email address</Form.Label>
@@ -76,6 +84,7 @@ function AuthForm({ email, setEmail, password, setPassword, onSubmit, message, t
             value={email}
             placeholder="Enter email"
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
             required
           />
         </Form.Group>
@@ -87,6 +96,7 @@ function AuthForm({ email, setEmail, password, setPassword, onSubmit, message, t
             value={password}
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
             required
           />
         </Form.Group>

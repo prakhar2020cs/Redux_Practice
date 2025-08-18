@@ -6,6 +6,7 @@ import { addToCart } from "../features/cart/cartSlice";
 import {
   decreaseProductStock,
 } from "../features/product/productSlice";
+import { useEffect } from "react";
 
 const Product = () => {
   const { data, status } = useSelector((state) => state.products);
