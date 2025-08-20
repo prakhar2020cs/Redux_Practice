@@ -5,16 +5,42 @@ import {
   decreaseCartStock,
   increaseCartStock,
   removeFromCart,
+  setCartFromDb,
 } from "../features/cart/cartSlice";
 import { decreaseProductStock, increaseProductStock } from "../features/product/productSlice";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Cart = () => {
-  // this is coming empty
-  const products = useSelector((state) => state.products);
+
+    const products = useSelector((state) => state.products);
   console.log(products, "products");
   const cartProducts = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   console.log(cartProducts, "cart-products");
+useEffect(() => {
+  // Fetch cart data from the server if it doesn't exist in localStorage
+  async function fetchCartData() {
+    // if(!localStorage.getItem("cart")){
+  let cartdata = null;
+    try { 
+ cartdata = await axios.get("https://localhost:7146/api/cart/getall", { withCredentials: true });
+      console.log(cartdata, "cart-data");
+      if (cartdata.data) {
+        dispatch(setCartFromDb(cartdata.data.allCart));
+      }
+    }
+    catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+    // }
+  
+  }
+  fetchCartData();
+
+},[]);
+
+
 
   const handleClearCart = () => {
     confirm("Are you sure you want to clear the cart?");
@@ -46,7 +72,7 @@ const Cart = () => {
   };
 
   const productCards = cartProducts.map((p) => (
-    <Col md={3} key={p.id}>
+    <Col md={3} key={p.productId + p.email} className="mb-4">
       <Card
         style={{
           margin: "10px",
@@ -61,8 +87,8 @@ const Cart = () => {
           style={{ margin: "auto" }}
         />
         <Card.Body>
-          <Card.Title>{p.title}</Card.Title>
-          <Card.Text>{p.price}</Card.Text>
+          <Card.Title>{p.productId}</Card.Title>
+          <Card.Text>{p.cartQuantity}</Card.Text>
           <Card.Text>
             <button
               className="btn btn-info"

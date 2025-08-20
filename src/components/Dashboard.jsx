@@ -1,9 +1,12 @@
-import React from 'react'
+
+import { Link } from 'react-router-dom'
+import Cart from './Cart'
 
 const Dashboard = () => {
   return (
     <div>
-      Dashboard
+      <Link to={"/Dashboard/Cart"}></Link>
+      <Cart/>
     </div>
 
   )

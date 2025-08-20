@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { getProducts } from "../product/productSlice";
 
 const loadCart = () => {
-  const saved = localStorage.getItem("cart");
+  let saved = localStorage.getItem("cart");
   return saved ? JSON.parse(saved) : [];
 };
 const saveCart = (state) => {
@@ -42,6 +42,12 @@ const cartSlice = createSlice({
     //     saveCart(state);
     //   }
     // },
+    setCartFromDb(state, action){
+state = action.payload  ; 
+console.log(state, "setCartFromDb");
+saveCart(state);
+   return state;
+    },
 
     increaseCartStock(state, action) {
       const cartItem = state.find((item) => item.id === action.payload.id);
@@ -53,6 +59,7 @@ const cartSlice = createSlice({
       if(action.payload.type === "remove"){
           const newData = state.filter((item)=>item.id !== action.payload.id)
         saveCart(newData)
+      
         return newData;
       
        }
@@ -91,6 +98,7 @@ export const {
   clearFromCart,
   increaseCartStock,
   decreaseCartStock,
+  setCartFromDb
 } = cartSlice.actions;
 
 // gives us state

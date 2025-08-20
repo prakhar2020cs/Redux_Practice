@@ -24,9 +24,12 @@ function App() {
               <PrivateRoute>
                 <Dashboard/>
               </PrivateRoute>
-              } />
+              } >
+              
+
+                </Route>
             <Route path="/products" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
+            {/* <Route path="/cart" element={<Cart />} /> */}
           </Route>
         </Routes>
       </div>
